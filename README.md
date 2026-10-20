@@ -1,23 +1,22 @@
 # Beam
 
-Send photos, videos and files from your phone to your computer over the local network. No cloud, no accounts.
+Send files between devices on your local network from any browser. No cloud, no accounts.
 
 ## Features
 
-- Take a photo or record a video straight from the phone browser
 - Pick or drag in any files (up to 1 GB each)
-- Files appear live on the receiver page
-- Preview, copy, download as zip, or delete
-- QR code on the receiver for quick phone pairing
+- Files appear live on the receive page
+- Preview, copy images, download singly, as a selection, or all at once as a zip
+- QR code on the receive page for quick pairing with another device
 
 ## Requirements
 
 - Python 3.9+
-- Phone and computer on the same Wi-Fi network
+- Both devices on the same network
 
 ## Run
 
-Windows: double-click `start.bat`. It creates a virtual environment, installs dependencies and opens the receiver page.
+Windows: double-click `start.bat`. It creates a virtual environment, installs dependencies and opens the receive page.
 
 Manual:
 
@@ -30,14 +29,14 @@ python app.py
 
 ## Usage
 
-1. Open `http://localhost:5050/receive` on the computer.
-2. Scan the QR code, or open the sender URL shown on the page, on your phone.
-3. Take a photo, record a video or choose files. They show up on the computer instantly.
+1. Open `http://localhost:5050/receive` on the receiving device.
+2. On the sending device, open the send URL shown in the terminal, or click "Add device" for a QR code.
+3. Choose files. They show up on the receive page instantly.
 
 ## Notes
 
 - Uploads are stored in `uploads/` (git-ignored).
-- Most mobile browsers only allow camera access in a secure context. If it is unavailable, file picking still works.
+- Zip downloads are built in memory, so very large batches need enough free RAM.
 - The server listens on all interfaces on port 5050 with no authentication, so only use it on networks you trust.
 
 ## Stack

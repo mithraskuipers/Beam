@@ -15,6 +15,7 @@
   const senderUrlEl = document.getElementById("senderUrl");
 
   const toggleSelectBtn = document.getElementById("toggleSelectBtn");
+  const downloadAllBtn = document.getElementById("downloadAllBtn");
   const clearAllBtn = document.getElementById("clearAllBtn");
   const selectionBar = document.getElementById("selectionBar");
   const selCount = document.getElementById("selCount");
@@ -210,9 +211,7 @@
   toggleSelectBtn.addEventListener("click", () => setSelectMode(!selectMode));
   selCancelBtn.addEventListener("click", () => setSelectMode(false));
 
-  selDownloadBtn.addEventListener("click", async () => {
-    if (selected.size === 0) return;
-    const ids = Array.from(selected);
+  async function downloadZip(ids, filename) {
     toast("Zipping files…");
     try {
       const res = await fetch("/api/download-zip", {
@@ -222,11 +221,21 @@
       });
       if (!res.ok) throw new Error("zip failed");
       const blob = await res.blob();
-      triggerBlobDownload(blob, "beam_files.zip");
-      toast(`Downloaded ${ids.length} files`);
+      triggerBlobDownload(blob, filename);
+      toast(ids.length === 1 ? "Downloaded 1 file" : `Downloaded ${ids.length} files`);
     } catch (err) {
       toast("Couldn't build the zip");
     }
+  }
+
+  selDownloadBtn.addEventListener("click", () => {
+    if (selected.size === 0) return;
+    downloadZip(Array.from(selected), "beam_files.zip");
+  });
+
+  downloadAllBtn.addEventListener("click", () => {
+    if (items.length === 0) return;
+    downloadZip(items.map((it) => it.id), "beam_all.zip");
   });
 
   selDeleteBtn.addEventListener("click", async () => {

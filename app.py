@@ -58,7 +58,7 @@ def category_for(mimetype: str) -> str:
 
 
 def get_lan_ip() -> str:
-    """Best-effort LAN IP so a phone on the same network can reach us."""
+    """Best-effort LAN IP so other devices on the same network can reach us."""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         s.connect(("8.8.8.8", 80))
@@ -239,8 +239,8 @@ if __name__ == "__main__":
     ip = get_lan_ip()
     print("=" * 56)
     print("  Beam is running")
-    print(f"  Receiver (this computer):  http://localhost:{PORT}/receive")
-    print(f"  Sender (your phone):       http://{ip}:{PORT}/send")
+    print(f"  Receive page:  http://localhost:{PORT}/receive")
+    print(f"  Send page:     http://{ip}:{PORT}/send")
     print("  Press CTRL+C to stop.")
     print("=" * 56)
     socketio.run(app, host="0.0.0.0", port=PORT, debug=False, allow_unsafe_werkzeug=True)

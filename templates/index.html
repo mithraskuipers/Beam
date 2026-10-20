@@ -15,27 +15,27 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
       </div>
       <h1>Beam</h1>
-      <p class="lede">Send photos, videos and files from your phone to this computer instantly. Pick a side to get started.</p>
+      <p class="lede">Send photos, videos and files between devices on your network instantly. Pick a side to get started.</p>
 
       <div class="choice-grid">
         <a class="choice-card send" href="{{ url_for('send_page') }}">
           <div class="choice-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/><circle cx="12" cy="9" r="3.2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8 12 3 7 8"/><path d="M12 3v12"/></svg>
           </div>
           <h2>Sender</h2>
-          <p class="choice-desc">Open this on your phone. Take a photo or pick files to beam over.</p>
+          <p class="choice-desc">Open this on the device you are sending from. Pick files to beam over.</p>
         </a>
 
         <a class="choice-card receive" href="{{ url_for('receive_page') }}">
           <div class="choice-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
           </div>
           <h2>Receiver</h2>
-          <p class="choice-desc">Open this on your laptop. Watch everything arrive live.</p>
+          <p class="choice-desc">Open this on the device you are receiving on. Watch everything arrive live.</p>
         </a>
       </div>
     </div>
-    <div class="landing-footer">Both devices need to be on the same Wi-Fi network</div>
+    <div class="landing-footer">Both devices need to be on the same network</div>
   </div>
 </body>
 </html>

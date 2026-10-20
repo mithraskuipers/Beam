@@ -1,20 +1,6 @@
 (() => {
   "use strict";
 
-  const cameraPanel = document.getElementById("cameraPanel");
-  const video = document.getElementById("cameraVideo");
-  const flashEl = document.getElementById("cameraFlash");
-  const controlsEl = document.getElementById("cameraControls");
-  const shutterBtn = document.getElementById("shutterBtn");
-  const flipBtn = document.getElementById("flipBtn");
-  const closeCamBtn = document.getElementById("closeCamBtn");
-  const cameraIdle = document.getElementById("cameraIdle");
-  const cameraIdleNote = document.getElementById("cameraIdleNote");
-  const photoModeBtn = document.getElementById("photoModeBtn");
-  const videoModeBtn = document.getElementById("videoModeBtn");
-  const recIndicator = document.getElementById("recIndicator");
-  const recTimerEl = document.getElementById("recTimer");
-
   const dropzone = document.getElementById("dropzone");
   const fileInput = document.getElementById("fileInput");
   const queueSection = document.getElementById("queueSection");
@@ -23,14 +9,6 @@
   const statusPill = document.getElementById("statusPill");
   const statusText = document.getElementById("statusText");
   const toastStack = document.getElementById("toastStack");
-
-  let currentStream = null;
-  let facingMode = "environment";
-  let captureMode = null; // "photo" | "video"
-  let mediaRecorder = null;
-  let recordedChunks = [];
-  let recInterval = null;
-  let recSeconds = 0;
 
   // ---------------------------------------------------------------- toasts
 
@@ -56,155 +34,6 @@
     statusPill.classList.remove("online");
     statusText.textContent = "Offline";
   });
-
-  // ---------------------------------------------------------------- camera
-
-  async function startCamera(mode) {
-    stopStreamOnly();
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: mode } },
-        audio: captureMode === "video",
-      });
-      currentStream = stream;
-      video.srcObject = stream;
-      cameraPanel.classList.toggle("facing-environment", mode === "environment");
-      controlsEl.hidden = false;
-    } catch (err) {
-      returnToIdle();
-      cameraIdleNote.hidden = false;
-    }
-  }
-
-  function stopStreamOnly() {
-    if (currentStream) {
-      currentStream.getTracks().forEach((t) => t.stop());
-      currentStream = null;
-    }
-  }
-
-  function returnToIdle() {
-    stopStreamOnly();
-    if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
-    clearInterval(recInterval);
-    recInterval = null;
-    recIndicator.hidden = true;
-    shutterBtn.classList.remove("recording");
-    controlsEl.hidden = true;
-    video.hidden = true;
-    video.srcObject = null;
-    cameraIdle.hidden = false;
-    captureMode = null;
-  }
-
-  if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-    photoModeBtn.hidden = true;
-    videoModeBtn.hidden = true;
-    cameraIdleNote.hidden = false;
-  }
-
-  photoModeBtn.addEventListener("click", () => {
-    captureMode = "photo";
-    cameraIdle.hidden = true;
-    cameraIdleNote.hidden = true;
-    video.hidden = false;
-    startCamera(facingMode);
-  });
-
-  videoModeBtn.addEventListener("click", () => {
-    captureMode = "video";
-    cameraIdle.hidden = true;
-    cameraIdleNote.hidden = true;
-    video.hidden = false;
-    startCamera(facingMode);
-  });
-
-  closeCamBtn.addEventListener("click", returnToIdle);
-
-  flipBtn.addEventListener("click", () => {
-    facingMode = facingMode === "environment" ? "user" : "environment";
-    startCamera(facingMode);
-  });
-
-  shutterBtn.addEventListener("click", () => {
-    if (!currentStream) return;
-    if (captureMode === "photo") {
-      takePhoto();
-    } else if (captureMode === "video") {
-      toggleRecording();
-    }
-  });
-
-  function takePhoto() {
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext("2d");
-    if (facingMode === "user") {
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
-    }
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    flashEl.classList.remove("flashing");
-    void flashEl.offsetWidth;
-    flashEl.classList.add("flashing");
-
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) return;
-        const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-        const file = new File([blob], `photo-${stamp}.jpg`, { type: "image/jpeg" });
-        uploadFile(file);
-        returnToIdle();
-      },
-      "image/jpeg",
-      0.92
-    );
-  }
-
-  function toggleRecording() {
-    if (!mediaRecorder || mediaRecorder.state === "inactive") {
-      startRecording();
-    } else {
-      mediaRecorder.stop();
-    }
-  }
-
-  function startRecording() {
-    recordedChunks = [];
-    const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
-      ? "video/webm;codecs=vp9,opus"
-      : MediaRecorder.isTypeSupported("video/webm")
-      ? "video/webm"
-      : "video/mp4";
-    mediaRecorder = new MediaRecorder(currentStream, { mimeType });
-
-    mediaRecorder.addEventListener("dataavailable", (e) => {
-      if (e.data && e.data.size > 0) recordedChunks.push(e.data);
-    });
-
-    mediaRecorder.addEventListener("stop", () => {
-      const blob = new Blob(recordedChunks, { type: mimeType });
-      const ext = mimeType.includes("mp4") ? "mp4" : "webm";
-      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const file = new File([blob], `video-${stamp}.${ext}`, { type: mimeType });
-      uploadFile(file);
-      returnToIdle();
-    });
-
-    mediaRecorder.start();
-    shutterBtn.classList.add("recording");
-    recSeconds = 0;
-    recTimerEl.textContent = "0:00";
-    recIndicator.hidden = false;
-    recInterval = setInterval(() => {
-      recSeconds += 1;
-      const m = Math.floor(recSeconds / 60);
-      const s = recSeconds % 60;
-      recTimerEl.textContent = `${m}:${String(s).padStart(2, "0")}`;
-    }, 1000);
-  }
 
   // ---------------------------------------------------------------- file picking
 

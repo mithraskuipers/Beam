@@ -29,10 +29,10 @@
   <div class="page">
 
     <div class="connect-panel" id="connectPanel" hidden>
-      <div class="connect-qr"><img id="qrImg" alt="QR code to open the sender page"></div>
+      <div class="connect-qr"><img id="qrImg" alt="QR code to open the send page"></div>
       <div class="connect-text">
-        <strong>Scan to send from your phone</strong>
-        <span>Or open <code id="senderUrl">…</code> on the same Wi-Fi</span>
+        <strong>Scan to open the send page on another device</strong>
+        <span>Or open <code id="senderUrl">…</code> on the same network</span>
       </div>
     </div>
 
@@ -44,6 +44,7 @@
       <div class="toolbar-right">
         <button class="btn btn-ghost btn-sm" id="toggleSelectBtn" type="button">Select</button>
         <button class="btn btn-ghost btn-sm" id="toggleConnectBtn" type="button">Add device</button>
+        <button class="btn btn-ghost btn-sm" id="downloadAllBtn" type="button">Download all</button>
         <button class="btn btn-danger btn-sm" id="clearAllBtn" type="button">Clear all</button>
       </div>
     </div>
@@ -53,7 +54,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
       </div>
       <strong>Waiting for something to arrive</strong>
-      <span>Open the Sender page on your phone and beam over a photo, video or file.</span>
+      <span>Open the Send page on another device and beam over a photo, video or file.</span>
     </div>
 
     <div class="gallery" id="gallery"></div>
